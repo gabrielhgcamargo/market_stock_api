@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+
 
 @Entity
 @Data
@@ -19,21 +19,27 @@ public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private Integer invoiceId;
 
-    @Column
+    @ManyToOne
+    @JoinColumn(name = "market_id")
     private Market market;
 
     @Column
-    private final LocalDateTime dateIssue = LocalDateTime.now();
+    private final LocalDate dateIssue = LocalDate.now();
 
     @Column
-    private LocalDateTime deliveryForecast;
+    private LocalDate deliveryForecast;
 
-    @Column
-    private Map<Integer, Product> products;
+    @Column(precision = 20, scale = 2)
+    private BigDecimal totalPrice;
 
     @Column
     private InvoiceStatus status;
+
+    @OneToMany(mappedBy = "invoice")
+    private List<ProductInvoice> productInvoices;
+
 
 }

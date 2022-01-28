@@ -5,28 +5,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class ProductInvoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
     private Integer id;
 
-    @Column
-    private String upc;
+    @ManyToOne
+    @JoinColumn
+    private Invoice invoice;
 
-    @Column
-    private String name;
+    @ManyToOne
+    @JoinColumn
+    private Product product;
 
     @Column
     private Integer quantity;
-
-    @Column(precision = 20, scale = 2)
-    private BigDecimal unitPrice;
 }
