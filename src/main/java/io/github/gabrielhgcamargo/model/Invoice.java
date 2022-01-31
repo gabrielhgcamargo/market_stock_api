@@ -27,7 +27,7 @@ public class Invoice {
     private Market market;
 
     @Column
-    private final LocalDate dateIssue = LocalDate.now();
+    private LocalDate dateIssue;
 
     @Column
     private LocalDate deliveryForecast;
