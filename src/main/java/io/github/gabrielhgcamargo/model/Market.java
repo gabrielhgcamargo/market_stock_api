@@ -1,5 +1,6 @@
 package io.github.gabrielhgcamargo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,7 @@ public class Market {
     @Column
     private String country;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "market", fetch = FetchType.LAZY)
     private Set<Invoice> invoices;
 

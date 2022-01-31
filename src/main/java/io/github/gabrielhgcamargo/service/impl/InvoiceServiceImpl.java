@@ -2,6 +2,7 @@ package io.github.gabrielhgcamargo.service.impl;
 
 import io.github.gabrielhgcamargo.dto.InvoiceDTO;
 import io.github.gabrielhgcamargo.dto.ProductInvoiceDTO;
+import io.github.gabrielhgcamargo.enums.InvoiceStatus;
 import io.github.gabrielhgcamargo.exception.RuleException;
 import io.github.gabrielhgcamargo.model.Invoice;
 import io.github.gabrielhgcamargo.model.Market;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +47,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setDateIssue(LocalDate.now());
         invoice.setDeliveryForecast(LocalDate.now().plusDays(15));
         invoice.setMarket(market);
+        invoice.setStatus(InvoiceStatus.ON_THE_WAY);
 
         List<ProductInvoice> productInvoices = convertItems(invoice, dto.getItems());
 
@@ -76,5 +79,10 @@ public class InvoiceServiceImpl implements InvoiceService {
                     productInvoice.setProduct(product);
                     return  productInvoice;
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Invoice> getCompleteInvoice(Integer id) {
+        return invoiceRepository.findByIdFetchItems(id);
     }
 }

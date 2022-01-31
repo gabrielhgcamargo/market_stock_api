@@ -36,6 +36,7 @@ public class Invoice {
     private BigDecimal totalPrice;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private InvoiceStatus status;
 
     @OneToMany(mappedBy = "invoice")
