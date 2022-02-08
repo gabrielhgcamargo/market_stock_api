@@ -34,8 +34,6 @@ public class ProductTesteController {
 
         ResponseEntity<Body> entity = restTemplate.getForEntity(finalUrl, Body.class);
 
-
-        System.out.println(entity.getBody().getTitle());
         return entity.getBody();
     }
 

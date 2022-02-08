@@ -26,4 +26,5 @@ public class Product {
 
     @Column(precision = 20, scale = 2)
     private BigDecimal unitPrice;
+
 }
