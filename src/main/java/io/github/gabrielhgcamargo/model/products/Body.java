@@ -1,23 +1,29 @@
 package io.github.gabrielhgcamargo.model.products;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
+@Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Body{
 
     @Column
-    @Id
     private int id;
 
     @Column
     private String title;
 
     @Column
-    private double price;
+    private BigDecimal price;
 
     @Column
     private int likes;
@@ -59,6 +65,7 @@ public class Body{
     private String generatedText;
 
     @Column
+    @Id
     private String upc;
 
     @Column

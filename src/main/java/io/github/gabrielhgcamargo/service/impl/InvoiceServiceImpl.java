@@ -6,16 +6,18 @@ import io.github.gabrielhgcamargo.enums.InvoiceStatus;
 import io.github.gabrielhgcamargo.exception.RuleException;
 import io.github.gabrielhgcamargo.model.Invoice;
 import io.github.gabrielhgcamargo.model.Market;
-import io.github.gabrielhgcamargo.model.Product;
 import io.github.gabrielhgcamargo.model.ProductInvoice;
+import io.github.gabrielhgcamargo.model.products.Body;
 import io.github.gabrielhgcamargo.repository.InvoiceRepository;
 import io.github.gabrielhgcamargo.repository.MarketRepository;
 import io.github.gabrielhgcamargo.repository.ProductInvoiceRepository;
-import io.github.gabrielhgcamargo.repository.ProductRepository;
 import io.github.gabrielhgcamargo.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,8 +30,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
     private final MarketRepository marketRepository;
-    private final ProductRepository productRepository;
     private final ProductInvoiceRepository productInvoiceRepository;
+
+    @Value("${api.key}")
+    private String apiKey;
+
+    @Value("${url.api.upc}")
+    private String urlApi;
 
     @Override
     @Transactional
@@ -65,18 +72,25 @@ public class InvoiceServiceImpl implements InvoiceService {
         return items
                 .stream()
                 .map(dto -> {
-                    Integer productId = dto.getProduct();
-                    Product product = productRepository
-                                    .findById(productId)
-                                    .orElseThrow(() -> new RuleException(
-                                            "Invalid product ID : " + productId));
+                    String productId = dto.getProduct();
+                    RestTemplate restTemplate = new RestTemplate();
 
+                    StringBuilder builder = new StringBuilder();
+
+                    String finalUrl = builder
+                            .append(urlApi)
+                            .append(productId)
+                            .append("?apiKey=")
+                            .append(apiKey)
+                            .toString();
+
+                    ResponseEntity<Body> entity = restTemplate.getForEntity(finalUrl, Body.class);
 
 
                     ProductInvoice productInvoice = new ProductInvoice();
                     productInvoice.setQuantity(dto.getQuantity());
                     productInvoice.setInvoice(invoice);
-                    productInvoice.setProduct(product);
+                    productInvoice.setBody(entity.getBody());
                     return  productInvoice;
                 }).collect(Collectors.toList());
     }

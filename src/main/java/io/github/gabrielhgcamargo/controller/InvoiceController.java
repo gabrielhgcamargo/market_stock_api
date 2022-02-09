@@ -66,9 +66,9 @@ public class InvoiceController {
                            .map(item -> InfoProductInvoiceDTO
                            .builder()
                            .id(item.getId())
-                           .upc(item.getProduct().getUpc())
-                           .name(item.getProduct().getName())
-                           .unitPrice(item.getProduct().getUnitPrice())
+                           .upc(item.getBody().getUpc())
+                           .name(item.getBody().getTitle())
+                           .unitPrice(item.getBody().getPrice())
                            .quantity(item.getQuantity())
                            .build()
 
